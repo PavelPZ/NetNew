@@ -1,0 +1,9 @@
+﻿Install-Package SharpZipLib
+Install-Package ClearScript.V8
+Install-Package YUICompressor.NET
+Install-Package Newtonsoft.Json -Version 7.0.1
+Install-Package HtmlAgilityPack
+
+Install-Package EntityFramework.Commands -Pre
+Install-Package WindowsAzure.Storage -Version 6.1.0
+Install-Package Microsoft.AspNet.WebApi (kvuli generaci TypeScript proxies z popisu services)

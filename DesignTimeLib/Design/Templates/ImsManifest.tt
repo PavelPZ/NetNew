@@ -1,0 +1,59 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="LMComLib" #> 
+<#@ import namespace="LMNetLib" #> 
+
+<# 
+  const string producerId = "com";
+  const string producer = "LANGMaster.com"; 
+  var line = cfg.line; 
+  var productTitle = cfg.title;
+  var productNum = cfg.prodUrl; 
+  var dictId = CommonLib.LineIdToLang(line).ToString().Replace('_', '-');
+  string uniqueId = producerId + "-" + productNum.Replace('/','-') + "-" + cfg.langStr; 
+#>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:imsmd="http://www.imsproject.org/xsd/ims_md_rootv1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsproject.org/xsd/ims_md_rootv1p1 ims_md_rootv1p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd"
+   identifier="MANIFEST-<#=uniqueId#>">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+    <lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1">  
+      <general>
+        <title>
+          <langstring><#=productTitle#></langstring>
+        </title>
+        <description>
+          <langstring><#=productTitle#></langstring>
+        </description>
+      </general>
+    </lom>
+  </metadata>
+  <organizations default="ORG-<#=uniqueId#>"> 
+    <organization identifier="ORG-<#=uniqueId#>" structure="hierarchical">
+      <title><#=producer#></title>
+      <item isvisible="true" identifier="ITEM1-<#=uniqueId#>" identifierref="RES1-<#=uniqueId#>"> 
+        <adlcp:masteryscore>75</adlcp:masteryscore> 
+        <title><#=productTitle#></title>
+      </item>  
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES1-<#=uniqueId#>" href="schools/index.htm" type="webcontent" adlcp:scormtype="sco">
+      <file href="schools/index.htm" />
+      <dependency identifierref="RES2-<#=uniqueId#>" />
+    </resource>
+    <resource identifier="RES2-<#=uniqueId#>" href="" type="webcontent" adlcp:scormtype="asset">
+      <# foreach (var f in files) {#>
+      <file href="<#= f#>" />
+      <# } #>
+    <# /*
+#include SourcePath + "scormGlobalFiles.iss"
+#include SourcePath + "products\" + productId + "_scorm_files.iss"
+*/ #>
+    </resource>
+  </resources>
+</manifest>

@@ -1,0 +1,21 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<# //https://github.com/faniereynders/WebApiProxy/blob/master/WebApiProxy.Server/Templates/JsProxyTemplate.tt #>
+module proxies {
+
+  export var invoke: (url: string, type: string, queryPars: Object, body: string, completed: (res) => void) => void;
+
+<# foreach(var definition in Definitions) { #>
+  export class <#= definition.Name.ToLower() #> {
+  <# foreach(var method in definition.ActionMethods) {#>
+  static <#=method.Name #>(<#=declarePars(method)#>): void {
+		  invoke(<#= invokePars(method) #>);
+	  } 
+  <# } #> 
+  };
+<# } #>
+}

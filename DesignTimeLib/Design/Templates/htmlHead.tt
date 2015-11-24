@@ -1,0 +1,59 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="LMComLib" #> 
+<#@ import namespace="LMNetLib" #> 
+<#@ import namespace="Packager" #> 
+<#@ import namespace="schools" #> 
+
+
+<# //**************** BOOT
+  var min = cfg.version == versions.minified ? ".min" : "";
+  var themeId = cfg.themeId!=null ? cfg.themeId : "";
+
+  if (!string.IsNullOrEmpty(cfg.baseTagUrl)) WriteLine(string.Format("<base href=\"{0}/schools/\" />", cfg.baseTagUrl));
+
+#>
+  <link href="../font-awesome/lm/externals<#=themeId#>.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="../jslib/ea/ea.css" />
+  <link rel="stylesheet" type="text/css" href="../blendedapi/styles/style.css" />
+  <link href="../jslib/css/lm<#=themeId#>.css" rel="stylesheet"/>
+
+<#
+  WriteLine(MainPage.writeCss(RewApp.publisherSkinCss(cfg)));
+  WriteLine(RewApp.writeCfg(cfg));
+#>
+  <script type='text/javascript' src='../jslib/js/lmconsoleinit.js'></script>
+
+  <script type='text/javascript' src='../jslib/scripts/jquery<#=min#>.js'></script>
+  <script type='text/javascript' src='../jslib/scripts/underscore<#=min#>.js'></script>
+  <script src="../jslib/scripts/angular.js" type="text/javascript"></script>
+
+  <script src="../jslib/scripts/angular-route.js" type="text/javascript"></script>
+  <script src="../jslib/scripts/angular-animate.js" type="text/javascript"></script>
+  <script src="../jslib/scripts/angular-cookies.js" type="text/javascript"></script>
+  <script src="../jslib/scripts/angular-ui-router.js" type="text/javascript"></script>
+  <script src="../jslib/scripts/ui-bootstrap-tpls.js" type="text/javascript"></script>
+<#
+  if (cfg.version == versions.minified) {
+#>
+  <script type='text/javascript'>var isOk = true;</script>
+  <!--[if lt IE 8]><script type='text/javascript'>isOk = false; alert('Internet Explorer 8 or better is required!');</script><![endif]-->
+  <script type='text/javascript'>
+  function jsUrl(stUrl, dynUrl, dynVer) {
+    if (!document.cookie || !_.any(document.cookie.toLowerCase().split(';'), function (c) { return c.trim() == 'dynamicjs=true'; })) return stUrl;
+    return cfg.licenceConfig.serviceUrl + '?type=' + dynUrl + '&version=' + dynVer;
+  }
+<#
+    if (cfg.licenceConfig.domain != null) WriteLine(string.Format("  if (window.location.host.toLowerCase().indexOf('{0}') < 0) {{ alert('Wrong domain: {0}'); isOk = false; }}", cfg.licenceConfig.domain.ToLower()));
+    if (cfg.licenceConfig.intExpiration > 0) WriteLine("  if (new Date().getTime() > {0}) {{ alert('Trial version expired at {1}'); isOk = false; }}", cfg.licenceConfig.intExpiration, cfg.licenceConfig.expiration.ToString("yyyy-MM-dd"));
+    WriteLine(RewApp.writeJS(cfg, forStatistics));
+    WriteLine("</script>");
+  } else if (cfg.version == versions.not_minified) { 
+    WriteLine(RewApp.writeJS(cfg, forStatistics));
+  } else {
+    WriteLine(RewApp.writeJS(cfg, forStatistics));
+  }
+#>
