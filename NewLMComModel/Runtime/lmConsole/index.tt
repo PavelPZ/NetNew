@@ -1,0 +1,41 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ output extension=".txt" #>
+
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>LMConsole Index</title>
+  <!--
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" />
+  <style type="text/css">
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <# foreach(var srv in data.OrderByDescending(g => g.Key)) {#>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title"><#=srv.Key#></h3>
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+        <# foreach(var dt in srv.OrderByDescending(d => d.server)) {#>
+          <li class="list-group-item "><a class="<#=dt.hasError ? "text-danger bold" : ""#>" href="<#=dt.url#>"><#=dt.server#></a></li>
+        <#}#>
+        </ul>
+      </div>
+    </div>
+  <#}#>
+</body>
+</html>

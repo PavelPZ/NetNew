@@ -1,0 +1,10 @@
+﻿iTextCSharp
+HtmlAgilityPack
+Install-Package EntityFramework.MicrosoftSqlServer -Pre
+Install-Package EntityFramework.Commands -Pre
+Install-Package EntityFramework.SQLite -Pre
+
+1. v app.config musi byt 
+<section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false"/>
+aby fungovala add-migration
+

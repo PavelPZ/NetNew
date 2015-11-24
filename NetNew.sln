@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradosLib", "TradosLib\Trad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectModel", "ObjectModel\ObjectModel.csproj", "{E88C653D-5518-4B96-9B99-6EFBD46A9141}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLMComModel", "NewLMComModel\NewLMComModel.csproj", "{81713F8F-6D25-4E48-AE82-AC1BD2565442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPPlus", "EPPlus\EPPlus.csproj", "{7B288026-5502-4A39-BF41-77E086F3E4A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{E88C653D-5518-4B96-9B99-6EFBD46A9141}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E88C653D-5518-4B96-9B99-6EFBD46A9141}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E88C653D-5518-4B96-9B99-6EFBD46A9141}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81713F8F-6D25-4E48-AE82-AC1BD2565442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81713F8F-6D25-4E48-AE82-AC1BD2565442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81713F8F-6D25-4E48-AE82-AC1BD2565442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81713F8F-6D25-4E48-AE82-AC1BD2565442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B288026-5502-4A39-BF41-77E086F3E4A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B288026-5502-4A39-BF41-77E086F3E4A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B288026-5502-4A39-BF41-77E086F3E4A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B288026-5502-4A39-BF41-77E086F3E4A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

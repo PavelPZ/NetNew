@@ -1,0 +1,66 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ output extension=".txt" #>
+
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title><#=title#></title>
+  <!--
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" />
+  <style type="text/css">
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <p class="navbar-text"><a href="..\..\index.htm" class="navbar-link"><i class="fa fa-arrow-circle-left fa-lg"></i></a></p>
+        <p class="navbar-text"><#=title#></p>
+      </div>
+    </div>
+  </nav>  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">External errors</h3>
+    </div>
+    <div class="panel-body">
+      <#foreach(var fn in externalErrors) {#>
+      <a href="<#=fn#>" class="text-danger bold"><#=fn#></a><br/>
+      <#}#>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Content (computers -> send date)</h3>
+    </div>
+    <div class="panel-body">
+      <ul>
+      <#foreach(var comp in comps) {#>
+        <li>
+          <b><#=comp.compId#></b>
+          <ul>
+          <#foreach(var send in comp.sends) {#>
+            <li>
+              <a href="<#=comp.compId#>-<#=send.now#>.htm" class="<#=send.hasError ? "text-danger bold" : ""#>"><#=send.date#></a>
+            </li>
+          <#}#>
+          </ul>
+        </li>
+      <#}#>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
