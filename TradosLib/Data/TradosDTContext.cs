@@ -8,6 +8,7 @@ namespace TradosDT {
   public class TradosDB : DbContext {
     public TradosDB() : base() {
       Database.EnsureCreated();
+      Database.SetCommandTimeout(1000000);
     }
 
     public static TradosDB getTradosContext() {

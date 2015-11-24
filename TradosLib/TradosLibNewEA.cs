@@ -1,26 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Resources;
-using System.IO;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Xml.Linq;
-using System.Xml;
-using System.Linq.Expressions;
-using System.Data.Common;
-using System.Threading;
-using System.Web.UI.WebControls;
-using System.ComponentModel;
-using Newtonsoft.Json;
-
-using LMNetLib;
+﻿using LMNetLib;
 using LMComLib;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace LMComLib {
 
@@ -30,6 +15,29 @@ namespace LMComLib {
 
   /// <summary>
   public static class NewEATradosLib {
+
+    //z D:\NetNew\ObjectModel\Course\Meta.cs
+    public static IEnumerable<TradosLib.tradosPage> tradosOper1Pages(IEnumerable<CourseMeta.data> nodes, LoggerMemory log, bool isFakeRussian) {
+      return nodes.SelectMany(n => n.scan()).GroupBy(dt => dt.getTradosPage()).
+        Where(g => g.Key != null).
+        Select(g => new TradosLib.tradosPage {
+          srcLang = isFakeRussian ? Langs.cs_cz : Langs.en_gb,
+          FileName = g.Key,
+          sentences = g.OfType<CourseMeta.ex>().SelectMany(e => e.toTransSentences(log)).Concat(
+            g.SelectMany(dt => CourseMeta.locLib.getLocId2EnglishLoc(dt.title, dt.url, null).Select(nv => new NameValueString { Name = dt.url + "/" + nv.Name, Value = nv.Value }))
+        ).
+        Where(kv => isFakeRussian ? !kv.Name.EndsWith("ahtmltitle") : true).
+        ToArray()
+        });
+    }
+    public static void tradosOper1(IEnumerable<CourseMeta.data> nodes, LoggerMemory log) {
+      var pages = tradosOper1Pages(nodes, log, false).ToArray();
+      TradosLib.oper1NewTradosPages(pages, false);
+    }
+    public static void tradosOper1(CourseMeta.data node, LoggerMemory log) {
+      TradosLib.oper1NewTradosPages(tradosOper1Pages(XExtension.Create(node), log, false).ToArray(), false);
+    }
+
 
     public static Langs[] AllLocs = CommonLib.bigLocalizations;
     //public static Langs[] AllLocs = new Langs[] { Langs.cs_cz }; //CommonLib.bigLocalizations
@@ -103,7 +111,7 @@ namespace LMComLib {
             lngRes = null;
           else {
             lngRes = new Dictionary<string, string>();
-            string f = TradosLib.transFinal(File.ReadAllText(fn));
+            string f = CSLocalize.transFinal(File.ReadAllText(fn));
             XElement root = XElement.Parse(f);
             foreach (var el in root.Descendants("data"))
               try {

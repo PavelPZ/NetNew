@@ -111,6 +111,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.0.0-beta-23516\lib\dotnet5.2\System.Diagnostics.DiagnosticSource.dll</HintPath>
       <Private>True</Private>
@@ -120,6 +121,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -141,6 +143,10 @@
     <ProjectReference Include="..\LMComLib\LMComLib.csproj">
       <Project>{c4201447-b3c3-4f3a-9e5f-4ff9b5f48570}</Project>
       <Name>LMComLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectModel\ObjectModel.csproj">
+      <Project>{e88c653d-5518-4b96-9b99-6efbd46a9141}</Project>
+      <Name>ObjectModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

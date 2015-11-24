@@ -1,11 +1,16 @@
-﻿using System;
+﻿using LMComLib;
+using LMNetLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
+using System.Web.Hosting;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -75,39 +80,39 @@ namespace TradosDT {
 
 namespace LMComLib {
 
-  public static class TradosDOC {
-    static void doc() {
-      /*========== hlavni metody ============*/
-      //Vytvoreni primarnich RESX souboru k ASPX, LMDATA, LMAP, JS, CS
-      TradosLib.GenResx(null);
-      //Import primarnich RESX souboru do Trados databaze
-      TradosLib.oper1(LocPageGroup.other);
-      //Priprava vet pro preklad
-      TradosLib.tradosOper2_forLang(LocPageGroup.other, Langs.no, false);
-      //Export pripravenych vet z Trados DB do Excelu
-      TradosLib.ExportXml(LocPageGroup.other, Langs.no, null, null);
-      //Upload Excelu do Tradso DB
-      TradosLib.ImportXml(null, null, null);
-      //Automaticky preklad OK vet
-      TradosLib.AutoTranslate(LocPageGroup.other, Langs.no, null);
-      //Generace jazykovych RESX souboru nebo lokalizovaneho .JS souboru
-      TradosLib.GenerateResx(LocPageGroup.other, Langs.no);
-      //Lokalizovany LMDATA soubor (merge puvodniho LMDATA s jazykovym RESX)
-      TradosLib.LocalizeXml(null, Langs.no);
-      //Prejmenovani *.ASPX na *.ASPX.TRANS resp *.ASPX.TRANSSRC
-      TradosLib.RenameAspx(null, true);
+  //public static class TradosDOC {
+  //  static void doc() {
+  //    /*========== hlavni metody ============*/
+  //    //Vytvoreni primarnich RESX souboru k ASPX, LMDATA, LMAP, JS, CS
+  //    TradosLib.GenResx(null);
+  //    //Import primarnich RESX souboru do Trados databaze
+  //    TradosLib.oper1(LocPageGroup.other);
+  //    //Priprava vet pro preklad
+  //    TradosLib.tradosOper2_forLang(LocPageGroup.other, Langs.no, false);
+  //    //Export pripravenych vet z Trados DB do Excelu
+  //    TradosLib.ExportXml(LocPageGroup.other, Langs.no, null, null);
+  //    //Upload Excelu do Tradso DB
+  //    TradosLib.ImportXml(null, null, null);
+  //    //Automaticky preklad OK vet
+  //    TradosLib.AutoTranslate(LocPageGroup.other, Langs.no, null);
+  //    //Generace jazykovych RESX souboru nebo lokalizovaneho .JS souboru
+  //    TradosLib.GenerateResx(LocPageGroup.other, Langs.no);
+  //    //Lokalizovany LMDATA soubor (merge puvodniho LMDATA s jazykovym RESX)
+  //    TradosLib.LocalizeXml(null, Langs.no);
+  //    //Prejmenovani *.ASPX na *.ASPX.TRANS resp *.ASPX.TRANSSRC
+  //    TradosLib.RenameAspx(null, true);
 
-    }
-    /*========== Ostatni typy ==========*/
-    //Trados konfiguracni soubor
-    public static LocCfg cfg;
-    //Identifikace BasicPath
-    public static BasicPathType bpt;
-    //Typy souboru k lokalizaci
-    public static LocFileType lt;
-    //Stav vety vzhledem k prekladu v Excelu 
-    public static LocCommand lc;
-  }
+  //  }
+  //  /*========== Ostatni typy ==========*/
+  //  //Trados konfiguracni soubor
+  //  public static LocCfg cfg;
+  //  //Identifikace BasicPath
+  //  public static BasicPathType bpt;
+  //  //Typy souboru k lokalizaci
+  //  public static LocFileType lt;
+  //  //Stav vety vzhledem k prekladu v Excelu 
+  //  public static LocCommand lc;
+  //}
 
   /// <summary>
   /// Typy souboru dle nasledneho zpracovani
@@ -152,10 +157,10 @@ namespace LMComLib {
   public static class TradosLib {
 
     public static void recomputeSentHash(int skipInterv) {
-      int cnt = Machines.getTradosContext(false).Sentences.Count();
+      int cnt = TradosDT.TradosDB.getTradosContext(false).Sentences.Count();
       int intCnt = skipInterv;
       foreach (var interv in LowUtils.intervals(cnt, 2000).Skip(skipInterv)) {
-        TradosDT.TradosDB db = Machines.getTradosContext(); db.CommandTimeout = 1000000;
+        TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(); 
         foreach (var sent in db.Sentences.Skip(interv.skip).Take(interv.take)) {
           sent.SrcHash = LowUtils.crc(sent.SrcText);
           sent.TransHash = LowUtils.crc(sent.TransText);
@@ -168,10 +173,10 @@ namespace LMComLib {
       }
     }
     public static void recomputeLookupHash(int skipInterv) {
-      int cnt = Machines.getTradosContext(false).Lookups.Count();
+      int cnt = TradosDT.TradosDB.getTradosContext(false).Lookups.Count();
       int intCnt = skipInterv;
       foreach (var interv in LowUtils.intervals(cnt, 2000).Skip(skipInterv)) {
-        TradosDT.TradosDB db = Machines.getTradosContext(); db.CommandTimeout = 1000000;
+        TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(); 
         foreach (var sent in db.Lookups.Skip(interv.skip).Take(interv.take)) {
           sent.SrcHash = LowUtils.crc(sent.SrcText);
           sent.TransHash = LowUtils.crc(sent.TransText);
@@ -205,13 +210,13 @@ namespace LMComLib {
     //sentFilter muze byt not null pouze tehdy, obsahuje-li pageFilter uplnou cestu k urovni (napr. lm/oldea/data/english1). Toto se ale v oper1New nekontroluje
     //pages jsou data pro Insert.
     public static void oper1NewTradosPagePart(string sentFilter, tradosPage page, bool isFakeRussian) {
-      TradosDT.TradosDB db = Machines.getTradosContext(); db.CommandTimeout = 1000000;
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(); 
       var singlePage = db.Pages.FirstOrDefault(p => p.FileName == page.FileName);
       var emptyData = page.sentences == null || page.sentences.Length == 0;
       if (singlePage == null && emptyData) return; //nothing todo
       //delete sentences na zaklade sentFilter
       if (singlePage != null) { //stranka existuje
-        var delDb = Machines.getTradosContext();
+        var delDb = TradosDT.TradosDB.getTradosContext();
         delDb.Sentences.RemoveRange(delDb.Sentences.Where(s => s.PageId == singlePage.Id && s.Name.StartsWith(sentFilter)));
         delDb.SaveChanges();
       }
@@ -230,13 +235,13 @@ namespace LMComLib {
     }
 
     public static void oper1NewTradosPages(tradosPage[] pages, bool isFakeRussian) {
-      TradosDT.TradosDB db = Machines.getTradosContext(); db.CommandTimeout = 1000000;
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(); 
       //insert pages
       foreach (var page in pages) {
         //kontrola jednoznacnosti sentence name
         var dupls = page.sentences.GroupBy(s => s.Name).Where(g => g.Select(s => s.Value).Distinct().Count() > 1).ToArray();
         if (dupls.Length > 0) throw new Exception(@"d:\LMCom\rew\LMComLib\Framework\TradosLib.cs, oper1NewTradosPages");
-        var delDb = Machines.getTradosContext();
+        var delDb = TradosDT.TradosDB.getTradosContext();
         delDb.Pages.RemoveRange(delDb.Pages.Where(p => p.FileName == page.FileName));
         delDb.SaveChanges();
 
@@ -248,7 +253,7 @@ namespace LMComLib {
     }
 
     public static void oper5TradosPage(string[] fileNames, Dictionary<Langs, Dictionary<string, string>> tradosCache) {
-      TradosDT.TradosDB db = Machines.getTradosContext(false); db.CommandTimeout = 1000000;
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(false); 
       foreach (var snt in db.Sentences.Where(s => fileNames.Contains(s.Page.FileName)).Select(s => new { s.Name, s.TransLang, s.TransText })) {
         var natLang = (Langs)snt.TransLang; if (natLang == Langs.es_es) natLang = Langs.sp_sp;
         if (!tradosCache.ContainsKey(natLang)) continue; //muze nastat pouze v debug mode, kdy je omezen sortiment jazyku
@@ -259,66 +264,66 @@ namespace LMComLib {
     /// <summary>
     /// Import RESX souboru do databaze
     /// </summary>
-    public static IEnumerable<string> oper1(LocPageGroup grp) {
-      LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(grp);
-      //RESX soubory 
-      List<string> files = getFiles(new LocPageGroup[] { grp }).Where(s => hasResxFile(s)).Select(s => resxFileName(s)).ToList();
-      if (File.Exists(group.GlobalResourcePath)) files.Add(group.GlobalResourcePath);
-      if (File.Exists(group.GlobalResourcePathJS)) files.Add(group.GlobalResourcePathJS);
-      //vsechny stranky grupy k vymazani
-      List<int> deletePageIds = Machines.getTradosContext(false).Pages.Where(p => p.PageGroup == (short)grp).Select(p => p.Id).ToList();
-      foreach (string fn in files.Where(f => File.Exists(f))) {
-        TradosDT.TradosDB db = Machines.getTradosContext();
-        db.CommandTimeout = 1000000;
-        //Adjustace stranky
-        TradosDT.Page page = db.Pages.Where(pg => pg.FileName == fn).SingleOrDefault();
-        if (page == null) { //nova stranka
-          page = new TradosDT.Page();
-          db.Pages.Add(page);
-        } else { //stranka existuje: vymaz vety
-          //odstran stranku ze stranek k vymazani
-          deletePageIds.Remove(page.Id);
-          //Vymazani vsech vet ke strance:
-          TradosDT.TradosDB pomDb = Machines.getTradosContext();
-          pomDb.CommandTimeout = 1000000;
-          pomDb.ExecuteCommand("DELETE FROM Sentence WHERE pageid={0} and srclang={1}", page.Id, (short)Langs.no);
-        }
-        page.FileName = fn.ToLowerInvariant();
-        page.PageGroup = (short)grp;
-        page.SeeUrl = computeSeeUrl(group, page.FileName);
-        page.Langs = group.fingLangFilter(fn);
-        db.SaveChanges();
-        StringBuilder sb = new StringBuilder();
-        //Vety z resource:
-        using (ResXResourceReader rdr = new ResXResourceReader(fn))
-          foreach (System.Collections.DictionaryEntry de in rdr) {
-            TradosDT.Sentence.insert(db, page.Id, (string)de.Key, null, Langs.no, normalizeXmlText(((string)de.Value).Replace("&nbsp;", "$nbsp;"), sb), group.PrimaryLang);
-          }
-        db.SaveChanges();
-        //Odstraneni (**) zavorek ve zdrojovych resx
-        string f = StringUtils.FileToString(fn);
-        f = CSLocalize.transFinal(f);
-        StringUtils.StringToFile(f, fn);
+    //public static IEnumerable<string> oper1(LocPageGroup grp) {
+    //  LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(grp);
+    //  //RESX soubory 
+    //  List<string> files = getFiles(new LocPageGroup[] { grp }).Where(s => hasResxFile(s)).Select(s => resxFileName(s)).ToList();
+    //  if (File.Exists(group.GlobalResourcePath)) files.Add(group.GlobalResourcePath);
+    //  if (File.Exists(group.GlobalResourcePathJS)) files.Add(group.GlobalResourcePathJS);
+    //  //vsechny stranky grupy k vymazani
+    //  List<int> deletePageIds = TradosDT.TradosDB.getTradosContext(false).Pages.Where(p => p.PageGroup == (short)grp).Select(p => p.Id).ToList();
+    //  foreach (string fn in files.Where(f => File.Exists(f))) {
+    //    TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
+        
+    //    //Adjustace stranky
+    //    TradosDT.Page page = db.Pages.Where(pg => pg.FileName == fn).SingleOrDefault();
+    //    if (page == null) { //nova stranka
+    //      page = new TradosDT.Page();
+    //      db.Pages.Add(page);
+    //    } else { //stranka existuje: vymaz vety
+    //      //odstran stranku ze stranek k vymazani
+    //      deletePageIds.Remove(page.Id);
+    //      //Vymazani vsech vet ke strance:
+    //      TradosDT.TradosDB pomDb = TradosDT.TradosDB.getTradosContext();
+    //      pomDb.CommandTimeout = 1000000;
+    //      pomDb.ExecuteCommand("DELETE FROM Sentence WHERE pageid={0} and srclang={1}", page.Id, (short)Langs.no);
+    //    }
+    //    page.FileName = fn.ToLowerInvariant();
+    //    page.PageGroup = (short)grp;
+    //    page.SeeUrl = computeSeeUrl(group, page.FileName);
+    //    page.Langs = group.fingLangFilter(fn);
+    //    db.SaveChanges();
+    //    StringBuilder sb = new StringBuilder();
+    //    //Vety z resource:
+    //    using (ResXResourceReader rdr = new ResXResourceReader(fn))
+    //      foreach (System.Collections.DictionaryEntry de in rdr) {
+    //        TradosDT.Sentence.insert(db, page.Id, (string)de.Key, null, Langs.no, normalizeXmlText(((string)de.Value).Replace("&nbsp;", "$nbsp;"), sb), group.PrimaryLang);
+    //      }
+    //    db.SaveChanges();
+    //    //Odstraneni (**) zavorek ve zdrojovych resx
+    //    string f = StringUtils.FileToString(fn);
+    //    f = CSLocalize.transFinal(f);
+    //    StringUtils.StringToFile(f, fn);
 
-        yield return fn;
-      }
-      //Vymaz stranky pro neexistujici soubory
-      TradosDT.TradosDB delDb = Machines.getTradosContext();
-      foreach (int id in deletePageIds) {
-        delDb.ExecuteCommand("DELETE FROM Sentence WHERE pageid={0}", id);
-        delDb.ExecuteCommand("DELETE FROM Pages WHERE id={0}", id);
-      }
-    }
+    //    yield return fn;
+    //  }
+    //  //Vymaz stranky pro neexistujici soubory
+    //  TradosDT.TradosDB delDb = TradosDT.TradosDB.getTradosContext();
+    //  foreach (int id in deletePageIds) {
+    //    delDb.ExecuteCommand("DELETE FROM Sentence WHERE pageid={0}", id);
+    //    delDb.ExecuteCommand("DELETE FROM Pages WHERE id={0}", id);
+    //  }
+    //}
 
     public static void oper2(LocPageGroup group, Langs transLang, bool adjustStrong) {
-      TradosDT.TradosDB db = Machines.getTradosContext();
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
       if (db.Locks.Where(l => l.Locked && group == (LocPageGroup)l.PageGroup && l.Lang == (short)transLang).Any())
         throw new Exception("Jedna Skupin souborů a Jazyka ja zablokována (locked). Nejdříve odblokujte na unlock.aspx stránce.");
       TradosLib.tradosOper2_forLang(group, transLang, adjustStrong);
     }
 
     public static void oper3(LocPageGroup group, Langs transLang, bool doLock, List<LocCommand> commands, Stream str) {
-      TradosDT.TradosDB db = Machines.getTradosContext();
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
       TradosDT.Lock lck = new TradosDT.Lock(); db.Locks.Add(lck);
       lck.Created = DateTime.UtcNow;
       lck.Lang = (short)transLang;
@@ -338,9 +343,9 @@ namespace LMComLib {
       TradosLib.ImportXml(fileContent, sent, log);
     }
 
-    public static void oper5(LocPageGroup group, Langs transLang) {
-      TradosLib.GenerateResx(group, transLang);
-    }
+    //public static void oper5(LocPageGroup group, Langs transLang) {
+    //  TradosLib.GenerateResx(group, transLang);
+    //}
 
     public static void AddResourceKeyToSitemap(string siteFn, string urlFixPart) {
       XElement root = XElement.Load(siteFn); urlFixPart = urlFixPart.ToLowerInvariant();
@@ -358,7 +363,7 @@ namespace LMComLib {
     }
 
     public static void cancelOper2(LocPageGroup group, Langs transLang) {
-      TradosDT.TradosDB db = Machines.getTradosContext();
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
       foreach (int pageId in db.Pages.Where(p => p.PageGroup == (short)group).Select(p => p.Id))
         db.Sentences.RemoveRange(db.Sentences.Where(s2 => s2.PageId == pageId && s2.TransLang == (short)transLang));
       db.SaveChanges();
@@ -425,11 +430,11 @@ namespace LMComLib {
       try { //XXX1
         //var cfg = ConfigLow.actConfig(false);
         //string txt = cfg != null && cfg.readNewFileIfExist != null ? cfg.readNewFileIfExist(virtualFn) : File.ReadAllText(virtualFn, Encoding.UTF8);
-        string txt = LMComLib.TradosLib.readLMDataFile!=null ? LMComLib.TradosLib.readLMDataFile() : File.ReadAllText(virtualFn, Encoding.UTF8);
+        string txt = LMComLib.TradosLib.readLMDataFile != null ? LMComLib.TradosLib.readLMDataFile() : File.ReadAllText(virtualFn, Encoding.UTF8);
         XElement res;
-        if (getFileType(virtualFn) == LocFileType.aspx) {
-          res = AspxParser.ToXml(txt);
-        } else
+        //if (getFileType(virtualFn) == LocFileType.aspx) {
+        //  res = AspxParser.ToXml(txt);
+        //} else
           res = XElement.Parse(txt, LoadOptions.PreserveWhitespace);
         foreach (XText nd in res.DescendantNodes().Where(n => n.NodeType == XmlNodeType.Text).Cast<XText>().Where(t => !string.IsNullOrEmpty(t.Value)))
           nd.Value = HtmlToXmlEntity.NormalizeEntities(nd.Value);
@@ -493,12 +498,12 @@ namespace LMComLib {
     /// <summary>
     /// Vygeneruje RESX z grupy souboru
     /// </summary>
-    public static IEnumerable<string> GenResx(GenResxContext ctx) {
-      //LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(ctx.grp);
-      //Stranky pro existujici RESX soubory 
-      foreach (string fn in getFiles(new LocPageGroup[] { ctx.grp }))
-        if (GenResx(fn, ctx) != null) yield return fn;
-    }
+    //public static IEnumerable<string> GenResx(GenResxContext ctx) {
+    //  //LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(ctx.grp);
+    //  //Stranky pro existujici RESX soubory 
+    //  foreach (string fn in getFiles(new LocPageGroup[] { ctx.grp }))
+    //    if (GenResx(fn, ctx) != null) yield return fn;
+    //}
 
     public static string resxFileName(string fn) {
       LocFileType ft = getFileType(fn);
@@ -532,77 +537,77 @@ namespace LMComLib {
     /// <summary>
     /// Vygeneruje RESX z jednoho souboru
     /// </summary>
-    public static XElement GenResx(string fn, GenResxContext ctx) {
-      LocFileType fileType = getFileType(fn);
-      if (fileType == LocFileType.aspx && (ctx.grp == LocPageGroup.rew_school || ctx.grp == LocPageGroup.rew_rewise)) fileType = LocFileType.js;
-      XElement root = null;
-      //Vytazeni konstant z CSharp kodu
-      if (fileType == LocFileType.aspx || fileType == LocFileType.cs) {
-        //if (fileType == LocFileType.cs && !File.Exists(fn))
-        //fn = fn.Replace(".cs",null);
-        string content = File.ReadAllText(fn);
-        bool modified;
-        content = CSParser.Parse(content, ctx, fileType, out modified);
-        if (modified) File.WriteAllText(fn, content);
-      }
-      //Vytazeni konstant z JS kodu
-      if (fileType == LocFileType.js) {
-        string content = File.ReadAllText(fn);
-        bool modified;
-        content = JSParser.Parse(content, ctx, out modified);
-        if (modified) File.WriteAllText(fn, content);
-      }
-      StringBuilder sb = new StringBuilder();
-      //Pres XML
-      if (fileType == LocFileType.aspx || fileType == LocFileType.lmap || fileType == LocFileType.lmdata || fileType == LocFileType.sitemap /*|| fileType == LocFileType.appdata*/ || fileType == LocFileType.downloadXml) {
-        root = /*fileType == LocFileType.appdata ? null : */fileToXml(fn);
-        /*if (ctx.grp == LocPageGroup.CPV) { //Pro CPV se jmeno prvku k prekladu sklada z parent chainu
-          XElement body = root.Element(html + "body");
-          foreach (XElement el in body.Descendants().Where(e => e.Attribute("force_trans") != null || (!e.HasElements && !e.Parents(false).Any(p => p.Attribute("force_trans") != null)))) {
-            if (el.Value.StartsWith("@")) continue;
-            sb.Length = 0; XElement e = el;
-            while (e != body) { sb.Insert(0, "." + e.Name.LocalName); e = e.Parent; }
-            sb.Remove(0, 1);
-            Anot.SetAnotName(el, sb.ToString());
-          }
-        }*/
-        //generace RESX
-        string outFn = resxFileName(fn);
-        resxNameValue[] items = resxItems(root, fileType).ToArray();
-        if (items.Length == 0) {
-          //vymazani RESX (i jazykovych)
-          if (File.Exists(outFn)) File.Delete(outFn);
-          foreach (Langs lng in Enum.GetValues(typeof(Langs))) {
-            string transFn = resxFileName(outFn, lng);
-            if (File.Exists(transFn)) File.Delete(transFn);
-          }
-          //return null;
-        }
-        if (items.Length > 0) {
-          LowUtils.AdjustFileDir(outFn);
-          using (ResXResourceWriter wr = new ResXResourceWriter(outFn))
-            foreach (resxNameValue nv in items)
-              wr.AddResource(nv.Name, nv.Value.Replace("$nbsp;", "&nbsp;"));
-        }
-        //Modifikace ASPX stranky
-        if (fileType == LocFileType.aspx) {
-          //New: title atribut v lmdata XML u LMDataControl kontrolky se lokalizuje pres CSLocalize
-          foreach (XAttribute attr in root.Descendants().Where(el => el.Name.Namespace == lm).Select(el => el.Attribute("title")).Where(a => a != null && a.Parent.Attribute("id") != null))
-            ctx.toTrans.Add(new TradosLib.resxNameValue(LMDataControlResId(fn, attr), attr.Value, (XAttribute)attr));
-          foreach (resxNameValue nv in items)
-            if (nv.Attr != null) AspxParser.modifyAspxPage(nv.Attr);
-            else AspxParser.modifyAspxPage(nv.Nodes, nv.Name, nv.Value);
-          //XCData dt = (XCData) root.DescendantNodes().Where(nd => nd.NodeType == XmlNodeType.CDATA && ((XCData)nd).Value.IndexOf("/*LMDataControl.Localize*/null") > 0).FirstOrDefault();  
-          //if (dt!=null)
-          root.Save(fn + ".xml", SaveOptions.DisableFormatting);
-          string content = AspxParser.ToString(root);
-          if (!File.Exists(fn + ".transsrc"))
-            StringUtils.StringToFileUtf8Signature(content, fn + ".trans");
-          //File.WriteAllText(fn + ".trans", content);
-        }
-      }
-      return root;
-    }
+    //public static XElement GenResx(string fn, GenResxContext ctx) {
+    //  LocFileType fileType = getFileType(fn);
+    //  if (fileType == LocFileType.aspx && (ctx.grp == LocPageGroup.rew_school || ctx.grp == LocPageGroup.rew_rewise)) fileType = LocFileType.js;
+    //  XElement root = null;
+    //  //Vytazeni konstant z CSharp kodu
+    //  if (fileType == LocFileType.aspx || fileType == LocFileType.cs) {
+    //    //if (fileType == LocFileType.cs && !File.Exists(fn))
+    //    //fn = fn.Replace(".cs",null);
+    //    string content = File.ReadAllText(fn);
+    //    bool modified;
+    //    content = CSParser.Parse(content, ctx, fileType, out modified);
+    //    if (modified) File.WriteAllText(fn, content);
+    //  }
+    //  //Vytazeni konstant z JS kodu
+    //  if (fileType == LocFileType.js) {
+    //    string content = File.ReadAllText(fn);
+    //    bool modified;
+    //    content = JSParser.Parse(content, ctx, out modified);
+    //    if (modified) File.WriteAllText(fn, content);
+    //  }
+    //  StringBuilder sb = new StringBuilder();
+    //  //Pres XML
+    //  if (fileType == LocFileType.aspx || fileType == LocFileType.lmap || fileType == LocFileType.lmdata || fileType == LocFileType.sitemap /*|| fileType == LocFileType.appdata*/ || fileType == LocFileType.downloadXml) {
+    //    root = /*fileType == LocFileType.appdata ? null : */fileToXml(fn);
+    //    /*if (ctx.grp == LocPageGroup.CPV) { //Pro CPV se jmeno prvku k prekladu sklada z parent chainu
+    //      XElement body = root.Element(html + "body");
+    //      foreach (XElement el in body.Descendants().Where(e => e.Attribute("force_trans") != null || (!e.HasElements && !e.Parents(false).Any(p => p.Attribute("force_trans") != null)))) {
+    //        if (el.Value.StartsWith("@")) continue;
+    //        sb.Length = 0; XElement e = el;
+    //        while (e != body) { sb.Insert(0, "." + e.Name.LocalName); e = e.Parent; }
+    //        sb.Remove(0, 1);
+    //        Anot.SetAnotName(el, sb.ToString());
+    //      }
+    //    }*/
+    //    //generace RESX
+    //    string outFn = resxFileName(fn);
+    //    resxNameValue[] items = resxItems(root, fileType).ToArray();
+    //    if (items.Length == 0) {
+    //      //vymazani RESX (i jazykovych)
+    //      if (File.Exists(outFn)) File.Delete(outFn);
+    //      foreach (Langs lng in Enum.GetValues(typeof(Langs))) {
+    //        string transFn = resxFileName(outFn, lng);
+    //        if (File.Exists(transFn)) File.Delete(transFn);
+    //      }
+    //      //return null;
+    //    }
+    //    if (items.Length > 0) {
+    //      LowUtils.AdjustFileDir(outFn);
+    //      using (ResXResourceWriter wr = new ResXResourceWriter(outFn))
+    //        foreach (resxNameValue nv in items)
+    //          wr.AddResource(nv.Name, nv.Value.Replace("$nbsp;", "&nbsp;"));
+    //    }
+    //    //Modifikace ASPX stranky
+    //    if (fileType == LocFileType.aspx) {
+    //      //New: title atribut v lmdata XML u LMDataControl kontrolky se lokalizuje pres CSLocalize
+    //      foreach (XAttribute attr in root.Descendants().Where(el => el.Name.Namespace == lm).Select(el => el.Attribute("title")).Where(a => a != null && a.Parent.Attribute("id") != null))
+    //        ctx.toTrans.Add(new TradosLib.resxNameValue(LMDataControlResId(fn, attr), attr.Value, (XAttribute)attr));
+    //      foreach (resxNameValue nv in items)
+    //        if (nv.Attr != null) AspxParser.modifyAspxPage(nv.Attr);
+    //        else AspxParser.modifyAspxPage(nv.Nodes, nv.Name, nv.Value);
+    //      //XCData dt = (XCData) root.DescendantNodes().Where(nd => nd.NodeType == XmlNodeType.CDATA && ((XCData)nd).Value.IndexOf("/*LMDataControl.Localize*/null") > 0).FirstOrDefault();  
+    //      //if (dt!=null)
+    //      root.Save(fn + ".xml", SaveOptions.DisableFormatting);
+    //      string content = AspxParser.ToString(root);
+    //      if (!File.Exists(fn + ".transsrc"))
+    //        StringUtils.StringToFileUtf8Signature(content, fn + ".trans");
+    //      //File.WriteAllText(fn + ".trans", content);
+    //    }
+    //  }
+    //  return root;
+    //}
     const string fnEnd = ".hmt.aspx";
     public static string LMDataControlResId(string fn, XAttribute attr) {
       fn = fn.Substring(fnStart.Length, fn.Length - fnStart.Length - fnEnd.Length).Replace('\\', '_').ToLowerInvariant();
@@ -1041,10 +1046,10 @@ namespace LMComLib {
     public static void tradosOper2_forLang(LocPageGroup grp, Langs transLang, bool isAutoTrans) {
       LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(grp);
       Langs srcLang = group.FindSrcLang(transLang);
-      foreach (int pageId in Machines.getTradosContext().Pages.
+      foreach (int pageId in TradosDT.TradosDB.getTradosContext().Pages.
           Where(p => p.PageGroup == (short)grp && (p.Langs == null || p.Langs.Contains(transLang.ToString()))).
           Select(p => p.Id)) {
-        TradosDT.TradosDB db = Machines.getTradosContext();
+        TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
         if (Machines.sb != null) Machines.sb.Length = 0;
         //Name vsech zdrojovych vet
         var srcIds = db.Sentences.Where(s => s.PageId == pageId && s.TransLang == (short)srcLang).Select(s => s.Name).ToArray();
@@ -1160,64 +1165,64 @@ namespace LMComLib {
     /// <summary>
     /// Pro skupinu stranek a jazyk vygeneruje RESX soubory (nebo lokalizovany .JS soubor)
     /// </summary>
-    public static void GenerateResx(LocPageGroup grp, Langs transLang) {
-      TradosDT.TradosDB db = Machines.getTradosContext(false);
-      foreach (TradosDT.Page pg in db.Pages.Where(p => p.PageGroup == (short)grp))
-        GenerateResx(db, pg, transLang);
-    }
+    //public static void GenerateResx(LocPageGroup grp, Langs transLang) {
+    //  TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(false);
+    //  foreach (TradosDT.Page pg in db.Pages.Where(p => p.PageGroup == (short)grp))
+    //    GenerateResx(db, pg, transLang);
+    //}
 
-    public static void GenerateResx(TradosDT.TradosDB db, TradosDT.Page pg, Langs transLang) {
-      if (pg.PageGroup == (short)LocPageGroup.newEA || pg.PageGroup == (short)LocPageGroup.fakeRussian) return;
-      LocFileType ft = TradosLib.getFileType(pg.FileName.Replace(".resx", null));
-      LocPageGroup grp = (LocPageGroup)pg.PageGroup;
-      if (ft == LocFileType.js) {
-        //generace lokalizovaneho .JS souboru misto .RESX
-        string fn = null; string fnContent = null;
-        LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(grp);
-        switch (grp) {
-          case LocPageGroup.EA_Code:
-            fn = group.BasicPath + @"\framework\script\lm\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
+    //public static void GenerateResx(TradosDT.TradosDB db, TradosDT.Page pg, Langs transLang) {
+    //  if (pg.PageGroup == (short)LocPageGroup.newEA || pg.PageGroup == (short)LocPageGroup.fakeRussian) return;
+    //  LocFileType ft = TradosLib.getFileType(pg.FileName.Replace(".resx", null));
+    //  LocPageGroup grp = (LocPageGroup)pg.PageGroup;
+    //  if (ft == LocFileType.js) {
+    //    //generace lokalizovaneho .JS souboru misto .RESX
+    //    string fn = null; string fnContent = null;
+    //    LocCfgPageGroupFilter group = LocCfg.Instance().findPageGroup(grp);
+    //    switch (grp) {
+    //      case LocPageGroup.EA_Code:
+    //        fn = group.BasicPath + @"\framework\script\lm\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
 
-            break;
-          case LocPageGroup.rew_school:
-            fn = group.BasicPath + @"\schools\loc\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
-            fnContent = NewEATradosLib.locJS(db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang).ToDictionary(sent => sent.Name, sent => sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText)));
-            fnContent = "var tradosData = " + fnContent + "; tradosData[\"forceLang\"] = \"" + transLang.ToString().Replace('_', '-') + "\";";
-            break;
-          case LocPageGroup.rew_rewise:
-            fn = group.BasicPath + @"\rewise\loc\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
-            break;
-        }
-        if (fn != null) {
-          using (StreamWriter wr = new StreamWriter(fn)) {
-            if (fnContent != null) wr.Write(fnContent);
-            else {
-              wr.WriteLine("var tradosData = [];");
-              foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang)) {
-                wr.Write("tradosData['"); wr.Write(sent.Name); wr.Write("'] = '");
-                wr.Write(sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("'", "\\'"));
-                wr.WriteLine("';");
-              }
-            }
-          }
-        }
-      } else {
-        bool isPartial = pg.Langs != null && !pg.Langs.Contains(transLang.ToString());
-        string fn = resxFileName(pg.FileName, transLang);
-        Langs dbLang = isPartial ? Langs.en_gb : transLang; //Difotne je vse anglicky
-        LowUtils.AdjustFileDir(fn);
-        using (ResXResourceWriter wr = new ResXResourceWriter(fn))
-          foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)dbLang))
-            wr.AddResource(sent.Name, sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("$nbsp;", "&nbsp;").Replace(crlfCode, " "));/*sent.TransText.Replace(crlfCode, "\r\n"));*/
-        if (ft == LocFileType.lmdata && (grp == LocPageGroup.CPV || fn.ToLowerInvariant().IndexOf(@"\localizecommon\") >= 0)) {
-          //vystup primo lokalizovaneho lmdata
-          string lmdata = pg.FileName.Replace(".resx", null).Replace(@"app_localresources\", null);
-          string resData = pg.FileName.Replace(".resx", null).Replace(".lmdata", "." + transLang.ToString().Replace('_', '-') + ".lmdata");
-          using (FileStream fs = new FileStream(resData, FileMode.Create, FileAccess.Write))
-            LocalizeXmlLow(lmdata, transLang, fs, false);
-        }
-      }
-    }
+    //        break;
+    //      case LocPageGroup.rew_school:
+    //        fn = group.BasicPath + @"\schools\loc\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
+    //        fnContent = NewEATradosLib.locJS(db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang).ToDictionary(sent => sent.Name, sent => sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText)));
+    //        fnContent = "var tradosData = " + fnContent + "; tradosData[\"forceLang\"] = \"" + transLang.ToString().Replace('_', '-') + "\";";
+    //        break;
+    //      case LocPageGroup.rew_rewise:
+    //        fn = group.BasicPath + @"\rewise\loc\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
+    //        break;
+    //    }
+    //    if (fn != null) {
+    //      using (StreamWriter wr = new StreamWriter(fn)) {
+    //        if (fnContent != null) wr.Write(fnContent);
+    //        else {
+    //          wr.WriteLine("var tradosData = [];");
+    //          foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang)) {
+    //            wr.Write("tradosData['"); wr.Write(sent.Name); wr.Write("'] = '");
+    //            wr.Write(sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("'", "\\'"));
+    //            wr.WriteLine("';");
+    //          }
+    //        }
+    //      }
+    //    }
+    //  } else {
+    //    bool isPartial = pg.Langs != null && !pg.Langs.Contains(transLang.ToString());
+    //    string fn = resxFileName(pg.FileName, transLang);
+    //    Langs dbLang = isPartial ? Langs.en_gb : transLang; //Difotne je vse anglicky
+    //    LowUtils.AdjustFileDir(fn);
+    //    using (ResXResourceWriter wr = new ResXResourceWriter(fn))
+    //      foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)dbLang))
+    //        wr.AddResource(sent.Name, sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("$nbsp;", "&nbsp;").Replace(crlfCode, " "));/*sent.TransText.Replace(crlfCode, "\r\n"));*/
+    //    if (ft == LocFileType.lmdata && (grp == LocPageGroup.CPV || fn.ToLowerInvariant().IndexOf(@"\localizecommon\") >= 0)) {
+    //      //vystup primo lokalizovaneho lmdata
+    //      string lmdata = pg.FileName.Replace(".resx", null).Replace(@"app_localresources\", null);
+    //      string resData = pg.FileName.Replace(".resx", null).Replace(".lmdata", "." + transLang.ToString().Replace('_', '-') + ".lmdata");
+    //      using (FileStream fs = new FileStream(resData, FileMode.Create, FileAccess.Write))
+    //        LocalizeXmlLow(lmdata, transLang, fs, false);
+    //    }
+    //  }
+    //}
 
     static string addTrans(string prop, string trans, Langs lang, Dictionary<Langs, string> buf) {
       LocalizeLib.LocStringDecode(prop, ref buf);
@@ -1295,7 +1300,7 @@ namespace LMComLib {
       List<LocCommand> filter = new List<LocCommand>(); filter.Add(LocCommand.OK);
       StringBuilder sb = new StringBuilder();
       foreach (exportCmlItem item in ExportXmlItems(grp, transLang, filter)) {
-        TradosDT.TradosDB db = Machines.getTradosContext();
+        TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
         TradosDT.Sentence sent = db.Sentences.Where(s => s.Id == item.Id).Single();
         string srcText = item.NewSrcText;
         string transText = item.TransText;
@@ -1469,7 +1474,7 @@ namespace LMComLib {
 
     public static IEnumerable<exportCmlItem> ExportXmlItems(LocPageGroup grp, Langs transLang, List<LocCommand> filter) {
       Langs srcLang = LocCfg.Instance().findPageGroup(grp).FindSrcLang(transLang);
-      TradosDT.TradosDB db = Machines.getTradosContext(false);
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext(false);
       foreach (TradosDT.Page pg in db.Pages.Where(p => p.PageGroup == (short)grp))
         foreach (exportCmlItem item in ExportXmlItems(db, pg, srcLang, transLang, filter))
           yield return item;
@@ -1713,7 +1718,7 @@ namespace LMComLib {
 
     public static TradosDT.Sentence insertTrans(int id, TradosDT.Sentence dummySent, string oldSrcText, string newSrcText, string transText, StringBuilder log, StringBuilder sb) {
       if (!checkTrans(id, ref newSrcText, ref transText, sb, log)) return null; //kontrola stejnych NOTRANS 
-      TradosDT.TradosDB db = Machines.getTradosContext();
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
       TradosDT.Sentence sent = null;
       try {
         sent = db.Sentences.Where(s => s.Id == id).Single();
@@ -1900,7 +1905,7 @@ namespace LMComLib {
 
     public static void NormalizeLookupXml() {
       StringBuilder sb = new StringBuilder();
-      TradosDT.TradosDB db = Machines.getTradosContext();
+      TradosDT.TradosDB db = TradosDT.TradosDB.getTradosContext();
       foreach (TradosDT.Lookup lkp in db.Lookups) {
         //foreach (Trados.Lookup lkp in db.Lookups.Where(l => (l.SrcText != null && l.SrcText.Contains("&")) || (l.TransText != null && l.TransText.Contains("&")))) {
         lkp.SrcText = normalizeLookupXml2(lkp.SrcText, sb);
