@@ -35,7 +35,7 @@ namespace TradosDT {
     }
     static Sentence insert(TradosDB db, string name, string srcText, Langs srcLang, string transText, Langs transLang) {
       TradosDT.Sentence sent = new TradosDT.Sentence();
-      db.Sentences.InsertOnSubmit(sent);
+      db.Sentences.Add(sent);
       sent.Name = name;
       sent.SrcLang = (short)srcLang;
       sent.SrcText = srcText;
@@ -49,7 +49,7 @@ namespace TradosDT {
 
   public partial class Lookup {
     public static Lookup insert(TradosDB db, string srcText, Langs srcLang, string transText, Langs transLang) {
-      Lookup res = new Lookup(); db.Lookups.InsertOnSubmit(res);
+      Lookup res = new Lookup(); db.Lookups.Add(res);
       res.finish(srcText, srcLang, transText, transLang);
       return res;
     }
@@ -212,12 +212,12 @@ namespace LMComLib {
       //delete sentences na zaklade sentFilter
       if (singlePage != null) { //stranka existuje
         var delDb = Machines.getTradosContext();
-        delDb.Sentences.DeleteAllOnSubmit(delDb.Sentences.Where(s => s.PageId == singlePage.Id && s.Name.StartsWith(sentFilter)));
+        delDb.Sentences.RemoveRange(delDb.Sentences.Where(s => s.PageId == singlePage.Id && s.Name.StartsWith(sentFilter)));
         delDb.SaveChanges();
       }
       //chybi data => delete page
-      if (emptyData && singlePage != null) { db.Pages.DeleteOnSubmit(singlePage); return; }
-      if (!emptyData && singlePage == null) db.Pages.InsertOnSubmit(singlePage = new TradosDT.Page { FileName = page.FileName, PageGroup = (short)(isFakeRussian ? LocPageGroup.fakeRussian : LocPageGroup.newEA), Langs = null /*TODO*/ });
+      if (emptyData && singlePage != null) { db.Pages.Remove(singlePage); return; }
+      if (!emptyData && singlePage == null) db.Pages.Add(singlePage = new TradosDT.Page { FileName = page.FileName, PageGroup = (short)(isFakeRussian ? LocPageGroup.fakeRussian : LocPageGroup.newEA), Langs = null /*TODO*/ });
       else {
         //kontrola zdrojoveho jazyka stranky - nesmi se zmenit
         var actSrcLang = (Langs)db.Sentences.Where(s => s.PageId == singlePage.Id).Select(s => s.TransLang).FirstOrDefault();
@@ -237,7 +237,7 @@ namespace LMComLib {
         var dupls = page.sentences.GroupBy(s => s.Name).Where(g => g.Select(s => s.Value).Distinct().Count() > 1).ToArray();
         if (dupls.Length > 0) throw new Exception(@"d:\LMCom\rew\LMComLib\Framework\TradosLib.cs, oper1NewTradosPages");
         var delDb = Machines.getTradosContext();
-        delDb.Pages.DeleteAllOnSubmit(delDb.Pages.Where(p => p.FileName == page.FileName));
+        delDb.Pages.RemoveRange(delDb.Pages.Where(p => p.FileName == page.FileName));
         delDb.SaveChanges();
 
         var pg = new TradosDT.Page { FileName = page.FileName, PageGroup = (short)(isFakeRussian ? LocPageGroup.fakeRussian : LocPageGroup.newEA), SeeUrl = page.FileName };
@@ -274,7 +274,7 @@ namespace LMComLib {
         TradosDT.Page page = db.Pages.Where(pg => pg.FileName == fn).SingleOrDefault();
         if (page == null) { //nova stranka
           page = new TradosDT.Page();
-          db.Pages.InsertOnSubmit(page);
+          db.Pages.Add(page);
         } else { //stranka existuje: vymaz vety
           //odstran stranku ze stranek k vymazani
           deletePageIds.Remove(page.Id);
@@ -319,7 +319,7 @@ namespace LMComLib {
 
     public static void oper3(LocPageGroup group, Langs transLang, bool doLock, List<LocCommand> commands, Stream str) {
       TradosDT.TradosDB db = Machines.getTradosContext();
-      TradosDT.Lock lck = new TradosDT.Lock(); db.Locks.InsertOnSubmit(lck);
+      TradosDT.Lock lck = new TradosDT.Lock(); db.Locks.Add(lck);
       lck.Created = DateTime.UtcNow;
       lck.Lang = (short)transLang;
       lck.PageGroup = (short)group;
@@ -360,7 +360,7 @@ namespace LMComLib {
     public static void cancelOper2(LocPageGroup group, Langs transLang) {
       TradosDT.TradosDB db = Machines.getTradosContext();
       foreach (int pageId in db.Pages.Where(p => p.PageGroup == (short)group).Select(p => p.Id))
-        db.Sentences.DeleteAllOnSubmit(db.Sentences.Where(s2 => s2.PageId == pageId && s2.TransLang == (short)transLang));
+        db.Sentences.RemoveRange(db.Sentences.Where(s2 => s2.PageId == pageId && s2.TransLang == (short)transLang));
       db.SaveChanges();
     }
 
@@ -1051,7 +1051,7 @@ namespace LMComLib {
         //Vsechny doposud pripravene vety
         var oldSents = db.Sentences.Where(s2 => s2.PageId == pageId && s2.TransLang == (short)transLang).ToArray();
         //Vymaz nepotrebne vety (neboli prelozene vety, ktere nejsou ve zdroji)
-        db.Sentences.DeleteAllOnSubmit(oldSents.Where(s => !srcIds.Contains(s.Name)));
+        db.Sentences.RemoveRange(oldSents.Where(s => !srcIds.Contains(s.Name)));
         //Vsechny zdroje a lookup preklady
         var autoTrans = db.Sentences.
           Where(s => s.PageId == pageId && s.TransLang == (short)srcLang && s.TransText != null).
@@ -1123,7 +1123,7 @@ namespace LMComLib {
         throw new Exception(string.Format("Lookup duplicites error: src={0}, trans={1}", oldSrcText, oldTransText), exp);
       }
       if (oldLkp != null) {
-        if (newLkp == null) oldLkp.finish(srcSent); //else db.Lookups.DeleteOnSubmit(oldLkp);
+        if (newLkp == null) oldLkp.finish(srcSent); //else db.Lookups.Remove(oldLkp);
         return;
       }
       //nejedna se o opravu, novy zaznam v lookup jiz existuje: neni co delat
@@ -1134,7 +1134,7 @@ namespace LMComLib {
           log.AppendFormat("Vznikla duplicita v Lookup tabulce, doporučujeme zkontrolovat (src={0}, trans={1})<br/>", srcSent.SrcText, srcSent.TransText);
       //Lookup polozka neexistuje, zaloz:
       TradosDT.Lookup lkp = new TradosDT.Lookup();
-      db.Lookups.InsertOnSubmit(lkp);
+      db.Lookups.Add(lkp);
       lkp.finish(srcSent);
     }
 
@@ -2114,132 +2114,132 @@ namespace LMComLib {
     }
   }
 
-  public class TransBlock : PlaceHolder {
+  //public class TransBlock : PlaceHolder {
 
-    string text;
-    [Localizable(true)]
-    public string Text { get { return text; } set { text = value; if (text != null) text = text.Replace("&nbsp;", "$nbsp;"); } }
-    public bool TransVersion { get; set; }
+  //  string text;
+  //  [Localizable(true)]
+  //  public string Text { get { return text; } set { text = value; if (text != null) text = text.Replace("&nbsp;", "$nbsp;"); } }
+  //  public bool TransVersion { get; set; }
 
-    protected override void OnInit(EventArgs e) {
-      base.OnInit(e);
-      EnableViewState = false;
-    }
+  //  protected override void OnInit(EventArgs e) {
+  //    base.OnInit(e);
+  //    EnableViewState = false;
+  //  }
 
-    protected override void CreateChildControls() {
-      try {
-        base.CreateChildControls();
-        if (!TransVersion) return;
-        XElement root = XElement.Parse("<root>" + Text + "</root>");
-        Dictionary<string, Control> ctrls = new Dictionary<string, Control>();
-        foreach (Control ctrl in Controls)
-          if (ctrl.ID != null) ctrls.Add(ctrl.ID.ToLowerInvariant(), ctrl); else continue;
-        Controls.Clear();
-        //modifikuj vyznacne tagy, nahrad SPAN tagy znackou
-        foreach (XElement el in root.Descendants().Where(el => el.Name.LocalName == "span").ToArray()) {
-          string id = el.Attribute("class").Value.ToLowerInvariant();
-          Control ctrl;
-          if (!ctrls.TryGetValue(id, out ctrl)) throw new Exception(string.Format("{2}.{0} tag ID in translation  1 '{1}')", id, Text, ID));
-          //Control ctrl = ctrls[id];//Controls.Cast<Control>().Where(c => c.ID == id).First();
-          //Uprav ASP kontrolky
-          if (ctrl is PlaceHolder) {
-          } else if (ctrl is HyperLink) {
-            ((HyperLink)ctrl).Text = el.Value;
-          } else if (ctrl is HtmlAnchor) {
-            ctrl.Controls.Add(new LiteralControl(el.Value));
-          }
-          //nahrad SPAN znackou
-          el.AddAfterSelf(new XText("###{" + id + "}###")); el.Remove();
-        }
-        //XML to string, rozdeleni dle znacek, doplneni LiteralControls
-        string xml = root.InnerXml();
-        foreach (regExItem reg in regExItem.Parse(xml, reg_marks)) {
-          if (reg.IsMatch) {
-            string id = reg.Value.Substring(4, reg.Value.Length - 8);
-            Control ctrl;
-            if (!ctrls.TryGetValue(id, out ctrl)) throw new Exception(string.Format("Missing {0} tag in translation 2 '{1}'", id, Text));
-            Controls.Add(ctrl);
-            ctrls.Remove(id);
-          } else Controls.Add(new LiteralControl(reg.Value.Replace("$nbsp;", "&nbsp;")));
-        }
-        if (Text != "###TRANS TODO###")
-          if (ctrls.Count > 0) throw new Exception(string.Format("Missing {0} tag in translation 3 '{1}'", ctrls.Keys.First(), Text));
-      } catch (Exception exp) {
-        throw new Exception(string.Format("Id={0}", ID), exp);
-      }
-    }
-    static Regex reg_marks = new Regex("###{.*?}###");
+  //  protected override void CreateChildControls() {
+  //    try {
+  //      base.CreateChildControls();
+  //      if (!TransVersion) return;
+  //      XElement root = XElement.Parse("<root>" + Text + "</root>");
+  //      Dictionary<string, Control> ctrls = new Dictionary<string, Control>();
+  //      foreach (Control ctrl in Controls)
+  //        if (ctrl.ID != null) ctrls.Add(ctrl.ID.ToLowerInvariant(), ctrl); else continue;
+  //      Controls.Clear();
+  //      //modifikuj vyznacne tagy, nahrad SPAN tagy znackou
+  //      foreach (XElement el in root.Descendants().Where(el => el.Name.LocalName == "span").ToArray()) {
+  //        string id = el.Attribute("class").Value.ToLowerInvariant();
+  //        Control ctrl;
+  //        if (!ctrls.TryGetValue(id, out ctrl)) throw new Exception(string.Format("{2}.{0} tag ID in translation  1 '{1}')", id, Text, ID));
+  //        //Control ctrl = ctrls[id];//Controls.Cast<Control>().Where(c => c.ID == id).First();
+  //        //Uprav ASP kontrolky
+  //        if (ctrl is PlaceHolder) {
+  //        } else if (ctrl is HyperLink) {
+  //          ((HyperLink)ctrl).Text = el.Value;
+  //        } else if (ctrl is HtmlAnchor) {
+  //          ctrl.Controls.Add(new LiteralControl(el.Value));
+  //        }
+  //        //nahrad SPAN znackou
+  //        el.AddAfterSelf(new XText("###{" + id + "}###")); el.Remove();
+  //      }
+  //      //XML to string, rozdeleni dle znacek, doplneni LiteralControls
+  //      string xml = root.InnerXml();
+  //      foreach (regExItem reg in regExItem.Parse(xml, reg_marks)) {
+  //        if (reg.IsMatch) {
+  //          string id = reg.Value.Substring(4, reg.Value.Length - 8);
+  //          Control ctrl;
+  //          if (!ctrls.TryGetValue(id, out ctrl)) throw new Exception(string.Format("Missing {0} tag in translation 2 '{1}'", id, Text));
+  //          Controls.Add(ctrl);
+  //          ctrls.Remove(id);
+  //        } else Controls.Add(new LiteralControl(reg.Value.Replace("$nbsp;", "&nbsp;")));
+  //      }
+  //      if (Text != "###TRANS TODO###")
+  //        if (ctrls.Count > 0) throw new Exception(string.Format("Missing {0} tag in translation 3 '{1}'", ctrls.Keys.First(), Text));
+  //    } catch (Exception exp) {
+  //      throw new Exception(string.Format("Id={0}", ID), exp);
+  //    }
+  //  }
+  //  static Regex reg_marks = new Regex("###{.*?}###");
 
-    static IEnumerable<XElement> tags(XElement root, bool isOK) {
-      return isOK ?
-        root.Descendants().Where(e => e.Name.Namespace != TradosLib.html || !inlineTags.Contains(e.Name.LocalName)) :
-        root.Descendants().Where(e => e.Name.Namespace == TradosLib.html && inlineTags.Contains(e.Name.LocalName));
-    }
-    static string[] inlineTags = new string[] { "b", "u", "i", "em", "br" };
+  //  static IEnumerable<XElement> tags(XElement root, bool isOK) {
+  //    return isOK ?
+  //      root.Descendants().Where(e => e.Name.Namespace != TradosLib.html || !inlineTags.Contains(e.Name.LocalName)) :
+  //      root.Descendants().Where(e => e.Name.Namespace == TradosLib.html && inlineTags.Contains(e.Name.LocalName));
+  //  }
+  //  static string[] inlineTags = new string[] { "b", "u", "i", "em", "br" };
 
-    static string innerXml(string xml) {
-      int begIdx = xml.IndexOf('>'); int endIdx = xml.LastIndexOf('<');
-      return xml.Substring(begIdx + 1, endIdx - begIdx - 1);
-    }
+  //  static string innerXml(string xml) {
+  //    int begIdx = xml.IndexOf('>'); int endIdx = xml.LastIndexOf('<');
+  //    return xml.Substring(begIdx + 1, endIdx - begIdx - 1);
+  //  }
 
-    static bool inPlaceHolder(XElement root, XNode nd) {
-      while (nd != root) {
-        if (nd is XElement && ((XElement)nd).Name.LocalName == "PlaceHolder") return true;
-        nd = nd.Parent;
-      }
-      return false;
-    }
+  //  static bool inPlaceHolder(XElement root, XNode nd) {
+  //    while (nd != root) {
+  //      if (nd is XElement && ((XElement)nd).Name.LocalName == "PlaceHolder") return true;
+  //      nd = nd.Parent;
+  //    }
+  //    return false;
+  //  }
 
-    static string id(XElement el) {
-      XAttribute attr = el.Attribute("ID");
-      if (attr == null) attr = el.Attribute("id");
-      return attr == null ? null : attr.Value.ToLower();
-    }
+  //  static string id(XElement el) {
+  //    XAttribute attr = el.Attribute("ID");
+  //    if (attr == null) attr = el.Attribute("id");
+  //    return attr == null ? null : attr.Value.ToLower();
+  //  }
 
-    public static void setText(XElement root) {
-      //Kontrola, zdali vsechny tagy obsahuji ID nebo id
-      if (tags(root, true).Where(el => id(el) == null).Any())
-        throw new Exception("Some <asp:???> tag in TransBlock has not ID: " + root.ToString());
-      //Kopie TransBlock
-      XElement textRoot = XElement.Parse(root.ToString()); textRoot.Add(new XAttribute("xmlns", "htmlPassivePage"));
-      foreach (XElement el in textRoot.Descendants()) {
-        XAttribute attr = el.Attribute("xmlns"); if (attr != null) attr.Remove();
-      }
-      //Nahrada tagu
-      foreach (XElement asp in tags(textRoot, true).ToArray()) {
-        XElement span = new XElement(TradosLib.html + "span", new XAttribute("class", id(asp)));
-        asp.AddAfterSelf(span);
-        asp.Remove();
-        switch (asp.Name.LocalName) {
-          case "PlaceHolder": break;
-          case "HyperLink":
-            span.Add(new XText(asp.Attribute("Text").Value));
-            break;
-          case "a":
-            span.Add(new XText(asp.Value));
-            break;
-        }
-      }
-      //Ulozeni kopie do Text atributu
-      root.Add(new XAttribute("Text", innerXml(textRoot.ToString())));
-      //V puvodnim tagu: TransVersion=true
-      root.Add(new XAttribute("TransVersion", "true"));
-      //V puvodnim tagu: vymazani vsech text nodes:
-      foreach (XText txt in root.DescendantNodes().Where(nd => nd is XText && !inPlaceHolder(root, nd)).ToArray())
-        txt.Remove();
-      //V puvodnim tagu: vymazani vsech inline tagu
-      foreach (XElement asp in tags(root, false).Where(el => !inPlaceHolder(root, el)).ToArray()) {
-        asp.AddAfterSelf(asp.Nodes()); asp.Remove();
-      }
-      //V puvodnim tagu: vymazani lokalizovanych atributu
-      foreach (XElement asp in tags(root, true).ToArray()) {
-        switch (asp.Name.LocalName) {
-          case "HyperLink":
-            asp.Attribute("Text").Remove();
-            break;
-        }
-      }
-    }
+  //  public static void setText(XElement root) {
+  //    //Kontrola, zdali vsechny tagy obsahuji ID nebo id
+  //    if (tags(root, true).Where(el => id(el) == null).Any())
+  //      throw new Exception("Some <asp:???> tag in TransBlock has not ID: " + root.ToString());
+  //    //Kopie TransBlock
+  //    XElement textRoot = XElement.Parse(root.ToString()); textRoot.Add(new XAttribute("xmlns", "htmlPassivePage"));
+  //    foreach (XElement el in textRoot.Descendants()) {
+  //      XAttribute attr = el.Attribute("xmlns"); if (attr != null) attr.Remove();
+  //    }
+  //    //Nahrada tagu
+  //    foreach (XElement asp in tags(textRoot, true).ToArray()) {
+  //      XElement span = new XElement(TradosLib.html + "span", new XAttribute("class", id(asp)));
+  //      asp.AddAfterSelf(span);
+  //      asp.Remove();
+  //      switch (asp.Name.LocalName) {
+  //        case "PlaceHolder": break;
+  //        case "HyperLink":
+  //          span.Add(new XText(asp.Attribute("Text").Value));
+  //          break;
+  //        case "a":
+  //          span.Add(new XText(asp.Value));
+  //          break;
+  //      }
+  //    }
+  //    //Ulozeni kopie do Text atributu
+  //    root.Add(new XAttribute("Text", innerXml(textRoot.ToString())));
+  //    //V puvodnim tagu: TransVersion=true
+  //    root.Add(new XAttribute("TransVersion", "true"));
+  //    //V puvodnim tagu: vymazani vsech text nodes:
+  //    foreach (XText txt in root.DescendantNodes().Where(nd => nd is XText && !inPlaceHolder(root, nd)).ToArray())
+  //      txt.Remove();
+  //    //V puvodnim tagu: vymazani vsech inline tagu
+  //    foreach (XElement asp in tags(root, false).Where(el => !inPlaceHolder(root, el)).ToArray()) {
+  //      asp.AddAfterSelf(asp.Nodes()); asp.Remove();
+  //    }
+  //    //V puvodnim tagu: vymazani lokalizovanych atributu
+  //    foreach (XElement asp in tags(root, true).ToArray()) {
+  //      switch (asp.Name.LocalName) {
+  //        case "HyperLink":
+  //          asp.Attribute("Text").Remove();
+  //          break;
+  //      }
+  //    }
+  //  }
 
-  }
+  //}
 }
