@@ -1,8 +1,16 @@
 ﻿using Microsoft.Data.Entity;
-using Microsoft.Data.Sqlite;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+
+public static class Machines {
+  public static TradosDT.TradosDB getTradosContext() {
+    return new TradosDT.TradosDB();
+  }
+  public static TradosDT.TradosDB getTradosContext(bool updatable) {
+    return new TradosDT.TradosDB();
+  }
+}
 
 namespace TradosDT {
   public class TradosDB : DbContext {
