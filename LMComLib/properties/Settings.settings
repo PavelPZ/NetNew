@@ -1,0 +1,101 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LMComLib.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LMComDataConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=pzika-notebook;Initial Catalog=LMComData;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=pzika-notebook;Initial Catalog=LMComData;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="lmcomdatatestConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=77.93.192.50\MSSQLSERVER,1435;Initial Catalog=lmcomdatatest;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=77.93.192.50\MSSQLSERVER,1435;Initial Catalog=lmcomdatatest;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest</Value>
+    </Setting>
+    <Setting Name="lmcomdata2ConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=77.93.192.50\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdata1;Password=abc123@&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=77.93.192.50\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdata1;Password=abc123@</Value>
+    </Setting>
+    <Setting Name="RosettaStone_comConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Provider=Microsoft.ACE.OLEDB.12.0;Data Source=q:\LMCom\LMCom\App_Data\Seo\RosettaStone.com.accdb&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.OleDb&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Provider=Microsoft.ACE.OLEDB.12.0;Data Source=q:\LMCom\LMCom\App_Data\Seo\RosettaStone.com.accdb</Value>
+    </Setting>
+    <Setting Name="AppDataConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;xxx&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">xxx</Value>
+    </Setting>
+    <Setting Name="LMTradosConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=PZ-ACER-2010\SQLEXPRESS;Initial Catalog=LMTrados;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=PZ-ACER-2010\SQLEXPRESS;Initial Catalog=LMTrados;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="RewiseConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=PZ-ACER-2010\SQLEXPRESS;Initial Catalog=Rewise;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=PZ-ACER-2010\SQLEXPRESS;Initial Catalog=Rewise;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="lmcomdatatestConnectionString1" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=195.250.145.24\MSSQLSERVER,1433;Initial Catalog=lmcomdatatest;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=195.250.145.24\MSSQLSERVER,1433;Initial Catalog=lmcomdatatest;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest</Value>
+    </Setting>
+    <Setting Name="lmcomdata2ConnectionString1" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdatatest;Password=lmcomdatatest</Value>
+    </Setting>
+    <Setting Name="lmcomdata2ConnectionString2" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;Persist Security Info=True;User ID=lmcomdatatest</Value>
+    </Setting>
+    <Setting Name="lmcomdata2ConnectionString3" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;User ID=lmcomdatatest;Password=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=195.250.145.22\MSSQLSERVER,1435;Initial Catalog=lmcomdata2;User ID=lmcomdatatest;Password=lmcomdatatest</Value>
+    </Setting>
+    <Setting Name="lmcomdatatestConnectionString2" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=195.250.145.24\MSSQLSERVER,1433;Initial Catalog=lmcomdatatest;User ID=lmcomdatatest;Password=lmcomdatatest&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=195.250.145.24\MSSQLSERVER,1433;Initial Catalog=lmcomdatatest;User ID=lmcomdatatest;Password=lmcomdatatest</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

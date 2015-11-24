@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="02b242ceb290418d8db4163e4e9b9ef5" xml:space="preserve">
+    <value>Език на програмата</value>
+  </data>
+  <data name="0e5c35819f354dad88ba01ff31951824" xml:space="preserve">
+    <value>Република Чехия</value>
+  </data>
+  <data name="18219c6e1ca84878a7d357e6b79dc23b" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="29baf440e1f044868549b1d469fa9315" xml:space="preserve">
+    <value>Общо за плащане</value>
+  </data>
+  <data name="3d15ef50b3c944ee9c9b575febba994e" xml:space="preserve">
+    <value>Доставчик</value>
+  </data>
+  <data name="3ebf4510a52b459ea0d924bb8546027e" xml:space="preserve">
+    <value>ФАКТУРА</value>
+  </data>
+  <data name="433fa06b4dff4123b209479b72a52307" xml:space="preserve">
+    <value>интерактивни упражнения</value>
+  </data>
+  <data name="4cd070ae691b49d3b082604774b49b26" xml:space="preserve">
+    <value>Доставчик</value>
+  </data>
+  <data name="55bf788aa56b4c9494141872d1f24fac" xml:space="preserve">
+    <value>описание на продукта</value>
+  </data>
+  <data name="586eda399bb0468a9c26226270eefa4d" xml:space="preserve">
+    <value>Непозволен достъп</value>
+  </data>
+  <data name="58e640ce22724980b748a043f68c3f2a" xml:space="preserve">
+    <value>аудиозаписа</value>
+  </data>
+  <data name="5dfbdc9947664350b47c1fae7bc1f930" xml:space="preserve">
+    <value>часа развлекателни уроци</value>
+  </data>
+  <data name="68e797efb57d42c68d906b437a981aba" xml:space="preserve">
+    <value>Данъчен номер</value>
+  </data>
+  <data name="6a8a44a05314408ca7d8db52cfc6688c" xml:space="preserve">
+    <value>ФАКТУРА</value>
+  </data>
+  <data name="81e373e71cb743468b933fca70c57f8d" xml:space="preserve">
+    <value>Влезте в системата по един от следните начини:</value>
+  </data>
+  <data name="82db8ceb85a94ecda354a3b5a96a47f8" xml:space="preserve">
+    <value>Ценова отстъпка</value>
+  </data>
+  <data name="8a74d0b3e3e64cb1a5c3b1c421e28a1d" xml:space="preserve">
+    <value>Данъчен номер</value>
+  </data>
+  <data name="9144144e56a443db827f816c08d5f17f" xml:space="preserve">
+    <value>минути звук</value>
+  </data>
+  <data name="97630346ba6646f6ab171dadd03a9825" xml:space="preserve">
+    <value>Ценова отстъпка</value>
+  </data>
+  <data name="a03d125eac70451299ec0253a77eb8b5" xml:space="preserve">
+    <value>Вход в системата</value>
+  </data>
+  <data name="bb2388167a404335944c495eb3237c8c" xml:space="preserve">
+    <value>думи и изрази</value>
+  </data>
+  <data name="c08ab32711664a96bdd55ac6a52f7dee" xml:space="preserve">
+    <value>код на продукта</value>
+  </data>
+  <data name="c6d4c77187234d7f8eb78cf3c69a2a37" xml:space="preserve">
+    <value>Общо за плащане</value>
+  </data>
+  <data name="cb0c6758ea48434e91745e2eeb061ab1" xml:space="preserve">
+    <value>Република Чехия</value>
+  </data>
+  <data name="db28ac96d3474b56a82cc5afd94e7c93" xml:space="preserve">
+    <value>описание на продукта</value>
+  </data>
+  <data name="de8e89b51bd648409eae37689964d717" xml:space="preserve">
+    <value>глави</value>
+  </data>
+  <data name="e359c155905a43759cfbbd39aa3c5807" xml:space="preserve">
+    <value>Лицензионен ключ</value>
+  </data>
+  <data name="e55dba34fa4f49b6a7474fa86db400c1" xml:space="preserve">
+    <value>картини и фотографии</value>
+  </data>
+  <data name="fd56e09c25d349a8878beb3fd7a6602d" xml:space="preserve">
+    <value>код на продукта</value>
+  </data>
+  <data name="fde361fa338040ca90f44a62098144bb" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+</root>

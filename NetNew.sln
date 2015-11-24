@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24627.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLib2", "DataLib2\DataLib2.csproj", "{D6C78A04-6A43-4AA6-B552-E8C331D58460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMComLib", "LMComLib\LMComLib.csproj", "{C4201447-B3C3-4F3A-9E5F-4FF9B5F48570}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradosLib", "TradosLib\TradosLib.csproj", "{C47B9422-0488-4BA2-9E3B-D8D83F1AE9F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6C78A04-6A43-4AA6-B552-E8C331D58460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C78A04-6A43-4AA6-B552-E8C331D58460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6C78A04-6A43-4AA6-B552-E8C331D58460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C78A04-6A43-4AA6-B552-E8C331D58460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4201447-B3C3-4F3A-9E5F-4FF9B5F48570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4201447-B3C3-4F3A-9E5F-4FF9B5F48570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4201447-B3C3-4F3A-9E5F-4FF9B5F48570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4201447-B3C3-4F3A-9E5F-4FF9B5F48570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C47B9422-0488-4BA2-9E3B-D8D83F1AE9F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C47B9422-0488-4BA2-9E3B-D8D83F1AE9F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C47B9422-0488-4BA2-9E3B-D8D83F1AE9F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C47B9422-0488-4BA2-9E3B-D8D83F1AE9F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

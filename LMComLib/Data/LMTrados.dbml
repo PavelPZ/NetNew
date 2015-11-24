@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="LMTrados" EntityNamespace="Trados" ContextNamespace="Trados" Class="TradosDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=ACER-PZ\SQLEXPRESS;Initial Catalog=LMTrados;Integrated Security=True" SettingsObjectName="LMComLib.Properties.Settings" SettingsPropertyName="LMTradosConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Lock" Member="Locks">
+    <Type Name="Lock">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Lang" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="PageGroup" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="Locked" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Sentence" Member="Sentences">
+    <Type Name="Sentence">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="PageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SrcLang" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="SrcText" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SrcHash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SrcLen" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransLang" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="TransText" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="TransHash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransLen" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Hash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Page_Sentence" Member="Page" ThisKey="PageId" OtherKey="Id" Type="Page" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Lookup" Member="Lookups">
+    <Type Name="Lookup">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SrcLang" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="SrcText" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="SrcHash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SrcLen" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransLang" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="TransText" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="TransHash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransLen" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Hash" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Pages" Member="Pages">
+    <Type Name="Page">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FileName" Type="System.String" DbType="VarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="PageGroup" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="SeeUrl" Type="System.String" DbType="VarChar(256)" CanBeNull="true" />
+      <Column Name="Langs" Type="System.String" DbType="VarChar(256)" CanBeNull="true" />
+      <Association Name="Page_Sentence" Member="Sentences" ThisKey="Id" OtherKey="PageId" Type="Sentence" />
+    </Type>
+  </Table>
+</Database>

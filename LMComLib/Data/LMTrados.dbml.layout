@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="LMTrados">
+  <DataContextMoniker Name="/TradosDataContext" />
+  <nestedChildShapes>
+    <classShape Id="211ef5cf-6a74-40ec-b3e0-720c1b313c70" absoluteBounds="0.75, 4.75, 2, 1.5891951497395827">
+      <DataClassMoniker Name="/TradosDataContext/Lock" />
+      <nestedChildShapes>
+        <elementListCompartment Id="33dab8aa-e985-4dd9-bc4a-6d57f5bbb9df" absoluteBounds="0.765, 5.21, 1.9700000000000002, 1.0291951497395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="01b98f1c-53d8-4147-b021-ede0e2b5f3a8" absoluteBounds="3.5, 1, 2, 2.7396264648437505">
+      <DataClassMoniker Name="/TradosDataContext/Sentence" />
+      <nestedChildShapes>
+        <elementListCompartment Id="eaa25349-58e5-466d-8791-f4a9faea47e5" absoluteBounds="3.515, 1.46, 1.9700000000000002, 2.17962646484375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="2456496e-ba9d-455c-b757-c3890f7f382f" absoluteBounds="3.75, 4.75, 2, 2.4109318033854166">
+      <DataClassMoniker Name="/TradosDataContext/Lookup" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b46346c6-c1f8-48bf-ae82-0c0896b34869" absoluteBounds="3.765, 5.21, 1.9700000000000002, 1.8509318033854165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="8161c4c3-ab16-472d-873d-8330fc9a7504" absoluteBounds="0.75, 1.625, 2, 1.5891951497395831">
+      <DataClassMoniker Name="/TradosDataContext/Page" />
+      <nestedChildShapes>
+        <elementListCompartment Id="54aa82a7-2cc0-4401-bc9b-11e2c6730ddc" absoluteBounds="0.765, 2.085, 1.9700000000000002, 1.0291951497395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.75 : 2.41959757486979); (3.5 : 2.41959757486979)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/TradosDataContext/Page/Page_Sentence" />
+      <nodes>
+        <classShapeMoniker Id="8161c4c3-ab16-472d-873d-8330fc9a7504" />
+        <classShapeMoniker Id="01b98f1c-53d8-4147-b021-ede0e2b5f3a8" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
