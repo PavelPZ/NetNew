@@ -274,25 +274,25 @@ namespace LMComLib {
     [DllImport("mpr.dll")]
     public static extern int WNetGetConnection(string localName, StringBuilder remoteName, int remoteNameLength);
 
-    public static Trados.TradosDataContext getTradosContext() {
-      Trados.TradosDataContext ctx = new Trados.TradosDataContext(TradosConnectionString());
-      ctx.CommandTimeout = 3000;
-      if (isPZComp()) ctx.Log = wr;
-      return ctx;
-    }
+    //public static Trados.TradosDataContext getTradosContext() {
+    //  Trados.TradosDataContext ctx = new Trados.TradosDataContext(TradosConnectionString());
+    //  ctx.CommandTimeout = 3000;
+    //  if (isPZComp()) ctx.Log = wr;
+    //  return ctx;
+    //}
 
-    public static Trados.TradosDataContext getTradosContext(bool ObjectTrackingEnabled) {
-      Trados.TradosDataContext ctx = new Trados.TradosDataContext(TradosConnectionString());
-      ctx.CommandTimeout = 1000;
-      ctx.ObjectTrackingEnabled = ObjectTrackingEnabled;
-      if (isPZComp()) ctx.Log = wr;
-      return ctx;
-    }
+    //public static Trados.TradosDataContext getTradosContext(bool ObjectTrackingEnabled) {
+    //  Trados.TradosDataContext ctx = new Trados.TradosDataContext(TradosConnectionString());
+    //  ctx.CommandTimeout = 1000;
+    //  ctx.ObjectTrackingEnabled = ObjectTrackingEnabled;
+    //  if (isPZComp()) ctx.Log = wr;
+    //  return ctx;
+    //}
 
-    public static string TradosConnectionString() {
-      return _tradosConnectionString ?? ConfigurationManager.ConnectionStrings["TradosData"].ConnectionString;
-    }
-    public static string _tradosConnectionString;
+    //public static string TradosConnectionString() {
+    //  return _tradosConnectionString ?? ConfigurationManager.ConnectionStrings["TradosData"].ConnectionString;
+    //}
+    //public static string _tradosConnectionString;
 
     public static string RewiseConnectionString() {
       string connName = data ? "Rewise" : "RewiseTest";

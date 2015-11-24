@@ -56,6 +56,17 @@ namespace LMComLib {
 
   public static class CSLocalize {
 
+
+    /// <summary>
+    /// Odstrani pomocne zavorky z přeloženého řetězce
+    /// </summary>
+    //static Regex rxTransFinal = new Regex(@"\(\*(\.|\,|\w|\s)*?\*\)");
+    static Regex rxTransFinal = new Regex(@"\(\*.*?\*\)");
+    public static string transFinal(string trans) {
+      if (trans == null) return null;
+      return rxTransFinal.Replace(trans, "");
+    }
+
     /// <summary>
     /// Jeden rozlezeny .RESX soubor
     /// </summary>
@@ -64,7 +75,7 @@ namespace LMComLib {
         XElement root = XElement.Load(fn);
         foreach (XElement el in root.Descendants("data"))
           try {
-            Add((string)el.Attribute("name"), TradosLib.transFinal(el.Element("value").Value));
+            Add((string)el.Attribute("name"), transFinal(el.Element("value").Value));
           } catch (Exception exp) {
             throw new Exception(string.Format("{0}:  {1}", fn, (string)el.Attribute("name")), exp);
           }
@@ -77,7 +88,7 @@ namespace LMComLib {
           XElement root = XElement.Load(actFn);
           foreach (XElement el in root.Descendants("data"))
             try {
-              val = TradosLib.transFinal(el.Element("value").Value);
+              val = transFinal(el.Element("value").Value);
               Add((string)el.Attribute("name"), val);
             } catch (Exception exp) {
               throw new Exception(string.Format("{0}:  {1}, Lang={2}, OldVal={3}, NewVal={4}", fn, (string)el.Attribute("name"), lang, this[(string)el.Attribute("name")], val), exp);
@@ -113,10 +124,10 @@ namespace LMComLib {
       public string GetString(string name, CultureInfo cult, string defaultValue) {
         //Pro dany jazyk:
         LangItem li;
-        if (!TryGetValue(cult.Name.ToLower(), out li) && !TryGetValue("no", out li)) return TradosLib.transFinal(defaultValue); //
+        if (!TryGetValue(cult.Name.ToLower(), out li) && !TryGetValue("no", out li)) return transFinal(defaultValue); //
         //Jazyk existuje, najdi retezec:
         string res;
-        if (!((LangItem)li).TryGetValue(name, out res)) return TradosLib.transFinal(defaultValue);
+        if (!((LangItem)li).TryGetValue(name, out res)) return transFinal(defaultValue);
         //Retezec existuje
         return res;
       }
@@ -162,25 +173,25 @@ namespace LMComLib {
     /// Hlavni procedura pro lokalizaci .CS souboru
     /// </summary>
     public static string localize(string guid, LocPageGroup grp, string txt) {
-      if (guid == null) return TradosLib.transFinal(txt); //jeste neproslo lokalizacnim mechanismem
+      if (guid == null) return transFinal(txt); //jeste neproslo lokalizacnim mechanismem
       else {
         CultureInfo cult = Thread.CurrentThread.CurrentUICulture;
         LangItems man = getManager(grp); //dej spravnou skupinu RESX souboru pro zadanou PageGroup
-        if (man == null) return TradosLib.transFinal(txt); //neni takova: vrat puvodni retezec
-        if (man.resMan != null) return TradosLib.transFinal(man.resMan.GetString(guid, cult) ?? txt); //Lokalizace ASP.NET mechanismem, pres ResourceManager
-        return TradosLib.transFinal(man.GetString(guid, cult, txt) ?? txt); //Lokalizace LM mechanismem pres obsah trados_globalresources/ adresare
+        if (man == null) return transFinal(txt); //neni takova: vrat puvodni retezec
+        if (man.resMan != null) return transFinal(man.resMan.GetString(guid, cult) ?? txt); //Lokalizace ASP.NET mechanismem, pres ResourceManager
+        return transFinal(man.GetString(guid, cult, txt) ?? txt); //Lokalizace LM mechanismem pres obsah trados_globalresources/ adresare
       }
     }
     public static string localize(string guid, LocPageGroup grp, Langs lng, string txt) {
-      if (guid == null || lng==Langs.no) return TradosLib.transFinal(txt); //jeste neproslo lokalizacnim mechanismem
+      if (guid == null || lng==Langs.no) return transFinal(txt); //jeste neproslo lokalizacnim mechanismem
       else {
         string cultStr = lng.ToString().Replace('_','-');
         if (cultStr == "sp-sp") cultStr = "es-es";
         CultureInfo cult = new CultureInfo(cultStr);
         LangItems man = getManager(grp); //dej spravnou skupinu RESX souboru pro zadanou PageGroup
-        if (man == null) return TradosLib.transFinal(txt); //neni takova: vrat puvodni retezec
-        if (man.resMan != null) return TradosLib.transFinal(man.resMan.GetString(guid, cult) ?? txt); //Lokalizace ASP.NET mechanismem, pres ResourceManager
-        return TradosLib.transFinal(man.GetString(guid, cult, txt) ?? txt); //Lokalizace LM mechanismem pres obsah trados_globalresources/ adresare
+        if (man == null) return transFinal(txt); //neni takova: vrat puvodni retezec
+        if (man.resMan != null) return transFinal(man.resMan.GetString(guid, cult) ?? txt); //Lokalizace ASP.NET mechanismem, pres ResourceManager
+        return transFinal(man.GetString(guid, cult, txt) ?? txt); //Lokalizace LM mechanismem pres obsah trados_globalresources/ adresare
       }
     }
   }
