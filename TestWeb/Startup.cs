@@ -18,7 +18,7 @@ namespace TestWeb {
     public void Configure(IApplicationBuilder app) {
       app.UseIISPlatformHandler();
 
-      var str = LMNetLib.LowUtils.bytesToString(new byte[] { 1, 2, 3 });
+      var str = LMNetLib.LowUtils.bytesToString(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
       //var ctx = NewData.Container.CreateContext();
       //var cnt = ctx.Companies.Count();
       //ctx = null;

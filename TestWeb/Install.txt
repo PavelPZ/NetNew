@@ -1,1 +1,3 @@
-﻿
+﻿dnu wrap "d:\NetNew\LMComLib\bin\Debug\LMComLib.dll" --framework dnx461
+dnu wrap "d:\NetNew\NewLMComModel\bin\Debug\NewLMComModel.dll" --framework dnx461
+dnu wrap "d:\NetNew\DataLib2\bin\Debug\DataLib2.dll" --framework dnx461

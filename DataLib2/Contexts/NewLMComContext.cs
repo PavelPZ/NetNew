@@ -29,8 +29,8 @@ namespace NewData {
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
       base.OnConfiguring(options);
       var config = ConfigurationManager.ConnectionStrings["Container"];
-      //var conn = new SqlConnection(config.ConnectionString);
-      var conn = new SqlConnection("Data Source=localhost\\SQLEXPRESS;Initial Catalog=NewLMCom_ef7;Integrated Security=False;User ID=lmcomdatatest;Password=lmcomdatatest;");
+      var conn = new SqlConnection(config.ConnectionString);
+      //var conn = new SqlConnection("Data Source=localhost\\SQLEXPRESS;Initial Catalog=NewLMCom_ef7;Integrated Security=False;User ID=lmcomdatatest;Password=lmcomdatatest;");
       options.UseSqlServer(conn);
     }
   }
