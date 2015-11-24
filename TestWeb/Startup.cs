@@ -18,8 +18,13 @@ namespace TestWeb {
     public void Configure(IApplicationBuilder app) {
       app.UseIISPlatformHandler();
 
+      var str = LMNetLib.LowUtils.bytesToString(new byte[] { 1, 2, 3 });
+      //var ctx = NewData.Container.CreateContext();
+      //var cnt = ctx.Companies.Count();
+      //ctx = null;
+
       app.Run(async (context) => {
-        await context.Response.WriteAsync("Hello World!");
+        await context.Response.WriteAsync("Hello World! " + str.ToString());
       });
     }
 

@@ -18,7 +18,6 @@ namespace NewData {
       base.OnConfiguring(options);
       var config = ConfigurationManager.ConnectionStrings["Container-sqlite"];
       var conn = new SqliteConnection(config.ConnectionString);
-      //var conn = new SqliteConnection("Data Source=" + MachinesLow.rootDir + config.ConnectionString);
       options.UseSqlite(conn);
     }
   }
@@ -30,7 +29,8 @@ namespace NewData {
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
       base.OnConfiguring(options);
       var config = ConfigurationManager.ConnectionStrings["Container"];
-      var conn = new SqlConnection(config.ConnectionString);
+      //var conn = new SqlConnection(config.ConnectionString);
+      var conn = new SqlConnection("Data Source=localhost\\SQLEXPRESS;Initial Catalog=NewLMCom_ef7;Integrated Security=False;User ID=lmcomdatatest;Password=lmcomdatatest;");
       options.UseSqlServer(conn);
     }
   }
@@ -42,8 +42,8 @@ namespace NewData {
     }
 
     public static Container CreateContext() {
-      //return new NewLMComContext_SqlServer();
-      return new NewLMComContext_Sqlite();
+      return new NewLMComContext_SqlServer();
+      //return new NewLMComContext_Sqlite();
     }
 
 

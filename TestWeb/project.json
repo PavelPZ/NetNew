@@ -16,6 +16,9 @@
   "frameworks": {
     "dnx451": {
       "dependencies": {
+        "LMComLib": "1.0.0-*",
+        "DataLib2": "1.0.0-*",
+        "NewLMComModel": "1.0.0-*"
       }
     }
   },
