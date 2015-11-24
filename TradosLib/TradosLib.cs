@@ -297,7 +297,7 @@ namespace LMComLib {
         db.SaveChanges();
         //Odstraneni (**) zavorek ve zdrojovych resx
         string f = StringUtils.FileToString(fn);
-        f = transFinal(f);
+        f = CSLocalize.transFinal(f);
         StringUtils.StringToFile(f, fn);
 
         yield return fn;
@@ -1181,7 +1181,7 @@ namespace LMComLib {
             break;
           case LocPageGroup.rew_school:
             fn = group.BasicPath + @"\schools\loc\tradosData." + transLang.ToString().Replace('_', '-') + ".js";
-            fnContent = NewEATradosLib.locJS(db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang).ToDictionary(sent => sent.Name, sent => sent.TransText == null ? "###TRANS TODO###" : transFinal(sent.TransText)));
+            fnContent = NewEATradosLib.locJS(db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang).ToDictionary(sent => sent.Name, sent => sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText)));
             fnContent = "var tradosData = " + fnContent + "; tradosData[\"forceLang\"] = \"" + transLang.ToString().Replace('_', '-') + "\";";
             break;
           case LocPageGroup.rew_rewise:
@@ -1195,7 +1195,7 @@ namespace LMComLib {
               wr.WriteLine("var tradosData = [];");
               foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)transLang)) {
                 wr.Write("tradosData['"); wr.Write(sent.Name); wr.Write("'] = '");
-                wr.Write(sent.TransText == null ? "###TRANS TODO###" : transFinal(sent.TransText).Replace("'", "\\'"));
+                wr.Write(sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("'", "\\'"));
                 wr.WriteLine("';");
               }
             }
@@ -1208,7 +1208,7 @@ namespace LMComLib {
         LowUtils.AdjustFileDir(fn);
         using (ResXResourceWriter wr = new ResXResourceWriter(fn))
           foreach (TradosDT.Sentence sent in db.Sentences.Where(s => s.PageId == pg.Id && s.TransLang == (short)dbLang))
-            wr.AddResource(sent.Name, sent.TransText == null ? "###TRANS TODO###" : transFinal(sent.TransText).Replace("$nbsp;", "&nbsp;").Replace(crlfCode, " "));/*sent.TransText.Replace(crlfCode, "\r\n"));*/
+            wr.AddResource(sent.Name, sent.TransText == null ? "###TRANS TODO###" : CSLocalize.transFinal(sent.TransText).Replace("$nbsp;", "&nbsp;").Replace(crlfCode, " "));/*sent.TransText.Replace(crlfCode, "\r\n"));*/
         if (ft == LocFileType.lmdata && (grp == LocPageGroup.CPV || fn.ToLowerInvariant().IndexOf(@"\localizecommon\") >= 0)) {
           //vystup primo lokalizovaneho lmdata
           string lmdata = pg.FileName.Replace(".resx", null).Replace(@"app_localresources\", null);
@@ -1222,7 +1222,7 @@ namespace LMComLib {
     static string addTrans(string prop, string trans, Langs lang, Dictionary<Langs, string> buf) {
       LocalizeLib.LocStringDecode(prop, ref buf);
       if (buf.Count == 0) return prop;
-      buf[lang] = trans == null ? "###TRANS TODO###" : transFinal(trans);
+      buf[lang] = trans == null ? "###TRANS TODO###" :  CSLocalize.transFinal(trans);
       return LocalizeLib.LocStringEncode(buf);
     }
 
@@ -1230,11 +1230,11 @@ namespace LMComLib {
     /// Odstrani pomocne zavorky z přeloženého řetězce
     /// </summary>
     //static Regex rxTransFinal = new Regex(@"\(\*(\.|\,|\w|\s)*?\*\)");
-    static Regex rxTransFinal = new Regex(@"\(\*.*?\*\)");
-    public static string transFinal(string trans) {
-      if (trans == null) return null;
-      return rxTransFinal.Replace(trans, "");
-    }
+    //static Regex rxTransFinal = new Regex(@"\(\*.*?\*\)");
+    //public static string CSLocalize.transFinal(string trans) {
+    //  if (trans == null) return null;
+    //  return rxTransFinal.Replace(trans, "");
+    //}
 
     public static LocCommand excelFlag(string oldSrcText, string newSrcText) {
       if (string.IsNullOrEmpty(newSrcText)) return LocCommand.NONE;
@@ -1816,7 +1816,7 @@ namespace LMComLib {
         //setUniqueIds(root); //jednoznacne ocislovani uzlu (je jedna ciselna rada pro kazdy tagName) 
         LocFileType fileType = getFileType(virtualFn);
         //Vyhod (**) zavorky
-        string f = transFinal(File.ReadAllText(outFn));
+        string f = CSLocalize.transFinal(File.ReadAllText(outFn));
         XElement res = XElement.Parse(f);
         foreach (XAttribute attr in transAttributes(root))
           attr.Value = getResxValue(getResxId(attr), res, outFn);// res.Descendants("value").Where(el => (string)el.Parent.Attribute("name") == id).Select(e => e.Value).Single();

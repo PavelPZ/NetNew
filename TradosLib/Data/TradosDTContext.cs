@@ -3,19 +3,18 @@ using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
-public static class Machines {
-  public static TradosDT.TradosDB getTradosContext() {
-    return new TradosDT.TradosDB();
-  }
-  public static TradosDT.TradosDB getTradosContext(bool updatable) {
-    return new TradosDT.TradosDB();
-  }
-}
-
 namespace TradosDT {
+
   public class TradosDB : DbContext {
-    public TradosDB(): base() {
+    public TradosDB() : base() {
       Database.EnsureCreated();
+    }
+
+    public static TradosDB getTradosContext() {
+      return new TradosDB();
+    }
+    public static TradosDB getTradosContext(bool updatable) {
+      return new TradosDB();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
